@@ -52,6 +52,38 @@ Start apache
 httpd -k start
 ```
 
+## Debugging Apache
+If at any stage apache is not working for some reason, consider these commands:
+
+```powershell
+httpd -t
+httpd -X
+httpd -k stop
+httpd -k config
+cat c:\Apache2.2\logs\error.log
+````
+You can also enable a server-status page with the following edits to httpd.conf
+```
+LoadModule authz_core_module modules/mod_authz_core.so
+LoadModule authz_host_module modules/mod_authz_host.so
+LoadModule status_module modules/mod_status.so
+LoadModule info_module modules/mod_status.so
+
+# server status page
+<Location /server-status>
+    SetHandler server-status
+    Require host localhost
+    Require ip 127.0.0.1
+</Location>
+
+# Server info page
+<Location /server-info>
+    SetHandler server-info
+    Require host localhost
+    Require ip 127.0.0.1
+</Location>
+
+```
 ## Setup mod_wsgi
 
 Install Microsoft C++ Build Tools
@@ -78,7 +110,7 @@ Add this code to httpd.conf in apache conf directory:
 ```apache httpd.conf
 # ServerName localhost:80 # use this if you're running this on a VirtualBox VM or PC
 ServerName localhost:80
-
+```
 
 # Django Project
 LoadFile "C:/Python39/python39.dll"
